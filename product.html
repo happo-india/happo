@@ -1,9 +1,162 @@
-<!-- ...HTML and CSS... -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Details</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(135deg, #f5f7ff, #eef1ff);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* MAIN CARD */
+.container {
+    max-width: 1000px;
+    width: 100%;
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+    display: flex;
+    gap: 40px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+}
+
+/* IMAGE SLIDER */
+.product-img {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.slides img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* ARROWS */
+.arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    font-size: 20px;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.arrow.left { left: 10px; }
+.arrow.right { right: 10px; }
+
+/* DETAILS */
+.details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.details h1 {
+    margin: 0;
+    font-size: 32px;
+}
+
+.price {
+    font-size: 26px;
+    font-weight: 600;
+    color: #667eea;
+    margin: 10px 0;
+}
+
+.desc {
+    color: #555;
+    margin: 20px 0;
+    line-height: 1.6;
+}
+
+/* SIZE */
+.size-options {
+    display: flex;
+    gap: 12px;
+    margin: 10px 0 25px;
+}
+
+.size-btn {
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 2px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.size-btn.active {
+    background: #667eea;
+    color: #fff;
+    border-color: #667eea;
+}
+
+/* BUY BUTTON */
+.buy-btn {
+    padding: 16px;
+    font-size: 18px;
+    border-radius: 14px;
+    border: none;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    cursor: pointer;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .slides img {
+        height: 300px;
+    }
+
+    .size-options {
+        justify-content: center;
+    }
+}
+</style>
+</head>
+
+<body>
 
 <div class="container">
+
     <!-- IMAGE SLIDER -->
     <div class="product-img">
         <div class="slides" id="slides"></div>
+
         <button class="arrow left" onclick="prevSlide()">❮</button>
         <button class="arrow right" onclick="nextSlide()">❯</button>
     </div>
@@ -17,10 +170,10 @@
         <div class="size-options" id="sizeOptions"></div>
         <button class="buy-btn" onclick="buyNow()">Buy Now</button>
     </div>
+
 </div>
 
 <script>
-/* GET PRODUCT DATA */
 const product = JSON.parse(localStorage.getItem("selectedProduct"));
 let selectedSize = null;
 let currentIndex = 0;
@@ -29,7 +182,7 @@ if (!product) {
     window.location.href = "index.html";
 }
 
-/* POPULATE DETAILS */
+/* PRODUCT DATA */
 document.getElementById("name").innerText = product.name;
 document.getElementById("price").innerText = product.price;
 document.getElementById("desc").innerText = product.desc;
@@ -42,47 +195,120 @@ product.images.forEach(img => {
     slides.appendChild(image);
 });
 
+/* DYNAMIC SIZES */
+const sizeBox = document.getElementById("sizeOptions");
+
+product.sizes.forEach(size => {
+    const btn = document.createElement("button");
+    btn.className = "size-btn";
+    btn.innerText = size;
+
+    btn.onclick = () => {
+        document.querySelectorAll(".size-btn")
+            .forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        selectedSize = size;
+    };
+
+    sizeBox.appendChild(btn);
+});
+
+/* BUY */
+function buyNow() {
+    if (!selectedSize) {
+        alert("Please select a size");
+        return;
+    }
+
+    product.selectedSize = selectedSize;
+    localStorage.setItem("selectedProduct", JSON.stringify(product));
+    window.location.href = "order.html";
+}
+</script>
+<script>
+/* GET PRODUCT DATA FROM LOCALSTORAGE */
+const product = JSON.parse(localStorage.getItem("selectedProduct"));
+let selectedSize = null;
+let currentIndex = 0;
+
+if (!product) {
+    // Redirect if no product selected
+    window.location.href = "index.html";
+}
+
+/* POPULATE PRODUCT DETAILS */
+document.getElementById("name").innerText = product.name;
+document.getElementById("price").innerText = product.price;
+document.getElementById("desc").innerText = product.desc;
+
+/* IMAGE SLIDER SETUP */
+const slides = document.getElementById("slides");
+
+// Add images to slides container
+product.images.forEach(img => {
+    const image = document.createElement("img");
+    image.src = img;
+    slides.appendChild(image);
+});
+
+// Function to update slider position
 function updateSlidePosition() {
     slides.style.transform = `translateX(-${currentIndex * 100}%)`;
 }
 
+// Next image
 function nextSlide() {
-    currentIndex = (currentIndex + 1) % product.images.length;
+    if (currentIndex < product.images.length - 1) {
+        currentIndex++;
+    } else {
+        currentIndex = 0; // loop to first image
+    }
     updateSlidePosition();
 }
 
+// Previous image
 function prevSlide() {
-    currentIndex = (currentIndex - 1 + product.images.length) % product.images.length;
+    if (currentIndex > 0) {
+        currentIndex--;
+    } else {
+        currentIndex = product.images.length - 1; // loop to last image
+    }
     updateSlidePosition();
 }
 
 // Initialize slider
 updateSlidePosition();
 
-/* SIZE BUTTONS */
+/* DYNAMIC SIZE BUTTONS */
 const sizeBox = document.getElementById("sizeOptions");
+
 product.sizes.forEach(size => {
     const btn = document.createElement("button");
     btn.className = "size-btn";
     btn.innerText = size;
+
     btn.onclick = () => {
-        document.querySelectorAll(".size-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".size-btn")
+            .forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         selectedSize = size;
     };
+
     sizeBox.appendChild(btn);
 });
 
-/* BUY BUTTON */
+/* BUY BUTTON FUNCTIONALITY */
 function buyNow() {
     if (!selectedSize) {
         alert("Please select a size");
         return;
     }
+
     product.selectedSize = selectedSize;
     localStorage.setItem("selectedProduct", JSON.stringify(product));
     window.location.href = "order.html";
 }
 </script>
 </body>
+
 </html>
