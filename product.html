@@ -224,7 +224,30 @@ function buyNow() {
     localStorage.setItem("selectedProduct", JSON.stringify(product));
     window.location.href = "order.html";
 }
+    /* SLIDER FUNCTIONS */
+function updateSlide() {
+    slides.style.transform = `translateX(-${currentIndex * 100}%)`;
+}
+
+function nextSlide() {
+    if (currentIndex < product.images.length - 1) {
+        currentIndex++;
+    } else {
+        currentIndex = 0;
+    }
+    updateSlide();
+}
+
+function prevSlide() {
+    if (currentIndex > 0) {
+        currentIndex--;
+    } else {
+        currentIndex = product.images.length - 1;
+    }
+    updateSlide();
+}
 </script>
 
 </body>
 </html>
+
