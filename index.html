@@ -182,11 +182,34 @@ footer {
         font-size: 13px;
     }
 }
+    /* SCROLLING MESSAGE */
+.scrolling-text {
+    width: 100%;
+    overflow: hidden;
+    background: black;
+    color: white;
+    white-space: nowrap;
+    padding: 8px 0;
+    font-weight: 500;
+}
+
+.scrolling-text p {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 12s linear infinite;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
 </style>
 </head>
 
 <body>
-
+<div class="scrolling-text">
+  <p>🔥 Free Shipping Across India | 50% OFF Today Only 🔥</p>
+</div>
 <header>
     <div class="logo">
         <img src="logo.png">
@@ -584,6 +607,7 @@ function openProduct(card) {
 
 </body>
 </html>
+
 
 
 
