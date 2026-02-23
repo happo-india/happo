@@ -78,7 +78,7 @@ label {
     color: #333;
 }
 
-input {
+input, textarea {
     width: 100%;
     padding: 12px;
     border-radius: 10px;
@@ -87,7 +87,13 @@ input {
     transition: border 0.3s, box-shadow 0.3s;
 }
 
-input:focus {
+textarea {
+    resize: none;
+    height: 80px;
+}
+
+input:focus,
+textarea:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
@@ -113,7 +119,7 @@ button:hover {
     box-shadow: 0 10px 25px rgba(102,126,234,0.45);
 }
 
-/* SMALL NOTE */
+/* NOTE */
 .note {
     text-align: center;
     font-size: 12px;
@@ -157,6 +163,12 @@ button:hover {
         <div class="form-group">
             <label>Phone Number</label>
             <input type="tel" name="number" placeholder="10-digit mobile number" required>
+        </div>
+
+        <!-- ✅ ADDRESS ADDED -->
+        <div class="form-group">
+            <label>Delivery Address</label>
+            <textarea name="address" placeholder="Orders are available only at Tirupati, Chandragiri, Svu College and MBU College." required></textarea>
         </div>
 
         <button type="submit">Place Order</button>
